@@ -309,23 +309,24 @@
 	)
 ))
 
-(defun get-square (s row col)(
-	if (equal s nil)
-		wall
-		(if (= row 0)
-			(get-square-col (first s) col)
-			(get-square (cdr s) (- row 1) col)
-		)
-
+(defun getNth (n l) (
+	if (< n 0)
+		nil
+	(
+		car (nthcdr n l)
+	)
 ))
 
-(defun get-square-col (r col) (
-	if (equal r nil)
-		wall
-		(if (= col 0)
-			(car r)
-			(get-square-col (cdr r) (- col 1))
-		)
+(defun get-square (s row col)(
+	let*
+	(
+		(val (getNth col (getNth row s)))
+	)
+	(
+		if (equal nil val)
+			wall
+			val
+	)
 ))
 
 ;; Set value of square at position targetPos to value targetVal
@@ -338,7 +339,7 @@
 		nil
 	(
 		if (= row 0)
-			(cons (set-square-col-helper (car s) col targetVal) (set-square-helper (cdr s) (- row 1) col targetVal))
+			(cons (set-square-col-helper (car s) col targetVal) (cdr s))
 			(cons (car s) (set-square-helper (cdr s) (- row 1) col targetVal))
 	)
 ))
@@ -348,11 +349,12 @@
 		nil
 	(
 		if (= col 0)
-			(cons targetVal (set-square-col-helper (cdr r) (- col 1) targetVal))
+			(cons targetVal (cdr r))
 			(cons (car r) (set-square-col-helper (cdr r) (- col 1) targetVal))
 	)
 ))
 
+;; Get value of square that is steps steps away from pos in direction d
 (defun fetch-square (s pos d steps) (
 	let*
 	(
@@ -365,6 +367,7 @@
 	)
 ))
 
+;; The coordinates that are steps steps away from pos in direction d
 (defun move-coords (pos d steps) (
 	let*
 	(
@@ -406,7 +409,7 @@
 ;; ; The Lisp 'time' function can be used to measure the 
 ;; ; running time of a function call.
 ;; ;
-(defun h2 (s)
+(defun h805167463 (s)
 	(let* 
 		((keeper-loc (getKeeperPosition s 0)))
 		(if (corner-box s s 0)
@@ -422,32 +425,31 @@
 (defun corner-box (s original-s r)
 	(if (null s)
 		nil
-		(or (corner-box-col (car s) original-s r 0) (corner-box (cdr s) original-s (+ r 1)))
+		(or (corner-box-row (car s) original-s r 0) (corner-box (cdr s) original-s (+ r 1)))
 	)
 )
 
 ; helper function for corner-box
-(defun corner-box-col (row original-s r c)
-	(if (null row)
+(defun corner-box-row (row original-s r c)
+	(if (equal row nil)
 		nil
-		(if (isBox (car row))
+		(if (isBox (first row))
 			(let* 
 				(
-					(right-val (get-square original-s (+ r 1) c))
-					(right (isWall right-val))
-					(left-val (get-square original-s (- r 1) c))
-					(left (isWall left-val))
-					(up-val (get-square original-s r (+ c 1)))
-					(up (isWall up-val))
-					(down-val (get-square original-s r (- c 1)))
-					(down (isWall down-val))
+					(pos (list row col))
+					(right-val (fetch-square original-s pos '(0 1) 1))
+					(left-val (fetch-square original-s pos '(0 -1) 1))
+					(up-val (fetch-square original-s pos '(-1 0) 1))
+					(down-val (fetch-square original-s pos '(1 0) 1))
+					(vert-check (or (isWall up-val) (isWall down-val)))
+					(horiz-check (or (isWall right-val) (isWall left-val)))
 				)
-				(if (or (or (and up right) (and up left)) (or (and down right) (and down left)))
+				(if (and vert-check horiz-check)
 					t
 					nil
 				)
 			)
-			(corner-box-col (cdr row) original-s r (+ c 1))
+			(corner-box-row (cdr row) original-s r (+ c 1))
 		)
 	)
 )

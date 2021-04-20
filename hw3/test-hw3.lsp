@@ -1,4 +1,5 @@
 (load "hw3.lsp")
+(load "a-star.lsp")
 
 ;; goal-test
 (format t "~A~A!~%" "goal-test Test Case 1: " (if (equal (goal-test 
