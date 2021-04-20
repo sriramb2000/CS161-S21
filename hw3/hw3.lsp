@@ -232,6 +232,8 @@
   );
 
 ; UP (0 -1), RIGHT (1 0), DOWN (0 1), LEFT (-1 0)
+;; Tries to move the player at position pos in direction d, 
+;; pushing any boxes if possible
 (defun try-move (s pos d)(
 	let*
 	(
@@ -253,6 +255,7 @@
 	)
 ))
 
+;; If adjSquare is a box, checks if the box can be pushed onto adjAdjSquare
 (defun can-push-box (adjSquare adjAdjSquare) (
 	and (or (= adjSquare box) (= adjSquare boxstar)) (or (= adjAdjSquare blank) (= adjAdjSquare star))
 ))
@@ -283,6 +286,8 @@
 	)
 ))
 
+;; What type of square should replace the old square (targetSquare)
+;; when we "pick-up" a keeper or box to move it 
 (defun transition-move-fn (targetSquare) (
 	cond
 	(
@@ -309,6 +314,7 @@
 	)
 ))
 
+;; Gets the nth element in a list
 (defun getNth (n l) (
 	if (< n 0)
 		nil
@@ -317,6 +323,7 @@
 	)
 ))
 
+;; Get the element at s[row][col], returns wall if out of bounds
 (defun get-square (s row col)(
 	let*
 	(
@@ -334,6 +341,7 @@
 	set-square-helper s (first targetPos) (second targetPos) targetVal
 ))
 
+;; Helper for square setter
 (defun set-square-helper (s row col targetVal) (
 	if (equal s nil)
 		nil
@@ -344,6 +352,7 @@
 	)
 ))
 
+;; Helper for square setter
 (defun set-square-col-helper (r col targetVal) (
 	if (equal r nil)
 		nil
@@ -436,7 +445,7 @@
 		(if (isBox (first row))
 			(let* 
 				(
-					(pos (list row col))
+					(pos (list r c))
 					(right-val (fetch-square original-s pos '(0 1) 1))
 					(left-val (fetch-square original-s pos '(0 -1) 1))
 					(up-val (fetch-square original-s pos '(-1 0) 1))
