@@ -2,19 +2,21 @@
 ; Homework 4 ;
 ;;;;;;;;;;;;;;
 
-
+;; Checks if a mapping satisfies a set of expressions, delta
 (defun satisfied? (delta mapping) (
   if (equal nil delta)
     t
     (and (expr-satisfied? (first delta) mapping) (satisfied? (cdr delta) mapping))
 ))
 
+;; Checks is a mapping satisfies an expression
 (defun expr-satisfied? (expr mapping) (
   if (equal nil expr)
     nil
     (or (member? (first expr) mapping) (expr-satisfied? (cdr expr) mapping))
 ))
 
+;; Determines if val is in list
 (defun member? (val list) (
   if (equal nil list)
     nil
@@ -29,6 +31,7 @@
     (or (is-expr-dead? n (first delta) mapping) (is-dead? n (cdr delta) mapping))
 ))
 
+;; Determines if an expression can be declared dead for a given mapping
 (defun is-expr-dead? (n expr mapping) (
   if (eval-with-n? n expr) 
     (not (expr-satisfied? expr mapping))
@@ -56,6 +59,9 @@
   (find-mapping n 1 delta nil)
 )
 
+;; Performs a DFS to find a mapping of n variables to satisfy the set of expressions
+;; delta, backtracking whenever it determines a mapping is dead or cannot satisfy 
+;; delta
 (defun find-mapping (n cur delta mapping) (
   if (< n cur)
     (if (satisfied? delta mapping)
