@@ -15,14 +15,39 @@
     (or (not (equal nil (find (first expr) mapping))) (expr-satisfied? (cdr expr) mapping))
 ))
 
+;; Tries to detect any dead expressions, assuming the first n 
+;; variables have been assigned
+(defun is-dead? (n delta mapping) (
+  if (equal nil delta)
+    nil
+    (or (is-expr-dead? n (first delta) mapping) (is-dead? n (cdr delta) mapping))
+))
+
+(defun is-expr-dead? (n expr mapping) (
+  if (eval-with-n? n expr) 
+    (not (expr-satisfied? expr mapping))
+    nil ;; Can't evaluate, cannot say it is dead
+))
+
+;; Is every member of delta less than or equal to n
+(defun eval-with-n? (n delta) (
+  if (equal nil delta)
+    t
+    (and (< (abs (first delta)) (+ n 1)) (eval-with-n? n (cdr delta)))
+))
+
 
 ; EXERCISE: Modify this function to decide satisifiability of delta.
 ; If delta is satisfiable, sat? returns a list of n integers that represents a model of delta,  
 ; otherwise it returns NIL. (See spec for details.)
 ; param n: number of variables in delta
 ; param delta: a CNF represented as a list of lists
+;; (defun sat? (n delta)
+;;   (find-mapping n delta (nlist n 1))
+;; )
+
 (defun sat? (n delta)
-  (find-mapping n delta (nlist n 1))
+  (find-mapping n 1 delta nil)
 )
 
 (defun nlist (n cur) (
@@ -44,18 +69,45 @@
 ))
 
 ;; find-mapping
-(defun find-mapping (n delta mapping) (
-  if (= n 0)
-    nil
+;; (defun find-mapping (n delta mapping) (
+;;   if (= n 0)
+;;     nil
+;;     (let*
+;;       (
+;;         (nthCheck (traverse-mapping n delta mapping))
+;;       )
+;;       (
+;;          if (equal nil nthCheck)
+;;           (traverse-mapping n delta (flip-nth (- n 1) mapping))
+;;           nthCheck
+;;       )      
+;;     )
+;; ))
+
+(defun find-mapping (n cur delta mapping) (
+  if (< n cur)
+    (if (satisfied? delta mapping)
+      mapping
+      nil    
+    )
     (let*
       (
-        (nthCheck (traverse-mapping n delta mapping))
+        (next (+ cur 1))
+        (tMapping (cons cur mapping))
+        (fMapping (cons (* -1 cur) mapping))
+        (tDead (is-dead? cur delta tMapping))
+        (fDead (is-dead? cur delta fMapping))
+        (tMap (if tDead nil (find-mapping n next delta tMapping)))
+        (fMap (if fDead nil (find-mapping n next delta fMapping)))
       )
       (
-         if (equal nil nthCheck)
-          (traverse-mapping n delta (flip-nth (- n 1) mapping))
-          nthCheck
-      )      
+        if tDead
+          fMap
+          (if (not (null tMap)) 
+            tMap
+            fMap
+          )
+      )
     )
 ))
 
