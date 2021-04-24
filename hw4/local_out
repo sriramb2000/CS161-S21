@@ -1,0 +1,23 @@
+Real time: 29.156013 sec.
+Run time: 29.154566 sec.
+Space: 673368 Bytes
+Testcase f1!
+Real time: 35.41162 sec.
+Run time: 35.40979 sec.
+Space: 834440 Bytes
+GC: 2, GC time: 0.005964 sec.
+Testcase f2!
+Real time: 7.746378 sec.
+Run time: 7.746285 sec.
+Space: 240848 Bytes
+Testcase f3!
+Real time: 38.045357 sec.
+Run time: 38.044796 sec.
+Space: 1051152 Bytes
+GC: 1, GC time: 0.003635 sec.
+Testcase f4!
+Real time: 33.522804 sec.
+Run time: 33.5224 sec.
+Space: 1220120 Bytes
+GC: 2, GC time: 0.007299 sec.
+Testcase f5!
