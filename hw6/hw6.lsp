@@ -70,12 +70,6 @@
   (cons (append (list (* -1 (node2var (first e) cur k))) (list (* -1 (node2var (second e) cur k)))) (_generate-edge-clauses e (+ cur 1) k))
 ))
 
-
-
-
-;; (graph-coloring-to-sat "graph1.txt" "graph1-3" 3)
-;; (graph-coloring-to-sat "graph1.txt" "graph1-4" 4)
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Your exercises end here. Below are top-level
 ; and utility functions that you do not need to understand.

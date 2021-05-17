@@ -1,0 +1,79 @@
+1-a: {x/A, y/A, z/B}
+1-b: There is no unifier.
+1-c: {x/B, y/A}
+1-d: {x/John, y/John}
+1-e: There is no unifier.
+
+2-a:
+    A x (Food(x) => Likes(John, x))
+    Food(Apples)
+    Food(Chicken)
+    A x E y ((Eats(y, x) & ~Kills(x, y)) => Food(x))
+    A y E x (Kills(x, y) => ~Alive(Bill))
+    Eats(Bill, Peanuts) & Alive(Bill)
+    A x (Eats(Bill, x) => Eats(Sue, x))
+2-b:
+    1. ~Food(x) | Likes(John, x)
+    2. Food(Apples)
+    3. Food(Chicken)
+    4. ~Eats(F(x), x) | Kills(x, F(x)) | Food(x)
+    5. ~Kills(F(y), y) | ~Alive(y)
+    6. Eats(Bill, Peanuts)
+    7. Alive(Bill)
+    8. ~Eats(Bill, x) | Eats(Sue, x)
+2-c:
+    For the sake of contradiction, let us assume that John does not like Peanuts.
+    1. ~Food(x) | Likes(John, x)
+    2. Food(Apples)
+    3. Food(Chicken)
+    4. ~Eats(F(x), x) | Kills(x, F(x)) | Food(x)
+    5. ~Kills(F(y), y) | ~Alive(y)
+    6. Eats(Bill, Peanuts)
+    7. Alive(Bill)
+    8. ~Eats(Bill, x) | Eats(Sue, x)
+    9. ~Likes(John, Peanuts)
+    -----------------------------------------------
+    10. ~Kills(Peanuts, Bill) (5 and 7) {y / Peanuts, F(y) / Bill}
+    11. Kills(Peanuts, Bill) | Food(Peanuts) (6 and 4) {y / Peanuts, F(y) / Bill}
+    12. Food(Peanuts) (10 and 11)
+    13. Likes(John, Peanuts) (1 and 11) {x / Peanuts}
+    14. NIL (9 and 13)
+
+    Assuming that John does not like Peanuts results in a contradiction, Therefore
+    John must like Peanuts.
+
+2-d: Eats(Sue, x) must be unified using the aforementioned Knowledge Base:
+    Eats(Sue, Peanuts) (6 and 8) {x / Peanuts}
+
+    Therefore Sue eats Peanuts. 
+2-e:
+    Knowledge Base:
+    1. ~Food(x) | Likes(John, x)
+    2. Food(Apples)
+    3. Food(Chicken)
+    4. ~Eats(F(x), x) | Kills(x, F(x)) | Food(x)
+    5. ~Kills(F(y), y) | ~Alive(y)
+    6. Eats(y, G(y)) | Die(y) 
+    7. ~Die(x) | ~Alive(x)
+    8. Alive(Bill)
+    9. ~Eats(Bill, x) | Eats(Sue, x)
+    -------------------------------------
+    10. Die(Bill) | Eats(Sue, G(Bill)) (6 and 9) {y / Bill, x / G(y)}
+    11. ~Alive(Bill) | Eats(Sue, G(Bill)) (7 and 10) {x / Bill}
+    12. Eats(Sue, G(Bill)) (8 and 11)
+
+    It is not possible to further resolve this knowledge base, and thus cannot draw any additional 
+    conclusion about what Sue eats.
+
+3-1: The instance is not satisfiable
+3-2: The instance is satisfiable
+3-3: It tells us that you need a minimum of 4 colors to properly color this graph.
+Let our colors be Cyan(C), Magenta(M), B(Y), and Black(B) (RGBY)
+    1 - C
+    2 - M
+    3 - B
+    4 - C
+    5 - M
+    6 - B
+    7 - Y
+3-4: The minimum number of colors needed to properly color the graph is 8.
